@@ -1,0 +1,78 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.avatar {
+  position: relative;
+  line-height: 1;
+  border-radius: 500px;
+  white-space: nowrap;
+  font-weight: 700;
+  border-radius: 100%;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  border-radius: 500px;
+  box-shadow: 0 5px 10px 0 rgba(50, 50, 50, .15)
+}
+
+.avatar img {
+  border-radius: inherit;
+  width: 100%
+}
+
+.gd-primary {
+  color: #fff;
+  border: none;
+  background: #448bff linear-gradient(45deg, #448bff, #44e9ff)
+}
+
+.no-decoration {
+  text-decoration: none !important;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.no-decoration:hover {
+  color: #ffffff;
+}
