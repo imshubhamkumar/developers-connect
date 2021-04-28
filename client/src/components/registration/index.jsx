@@ -4,8 +4,12 @@ import './registration.css'
 import SignUpForm from './signUpForm';
 import FormValidators from './validator';
 import { signUpUser } from '../../dataService';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const validateSignUpForm = FormValidators.validateSignUpForm;
 const zxcvbn = require('zxcvbn');
+
+toast.configure();
 
 class SignUp extends Component {
     constructor(props) {
@@ -61,7 +65,17 @@ class SignUp extends Component {
           user
         });
       }
-    
+      notify = (msg, type, location, timer, progressBar) => {
+        toast[type](msg,{
+            position: location,
+            autoClose: timer,
+            hideProgressBar: progressBar,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+      }
       pwHandleChange(event) {
         const field = event.target.name;
         const user = this.state.user;
@@ -109,7 +123,10 @@ class SignUp extends Component {
         }
         await signUpUser(params).then((result) =>{
           if(result.status) {
+            this.notify('Your signed up successfully please goto login', 'success', 'bottom-right', '5000', false);
             <Redirect to="/login"/>
+          } else {
+            this.notify(result.errors, 'error', 'top-center', false, true)
           }
         })
       }

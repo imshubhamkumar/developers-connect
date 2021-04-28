@@ -8,9 +8,16 @@ class Navbar extends Component {
                 <div className="container-fluid">
                     <h5>Navbar</h5>
                     <form className="d-flex">
+                        {window.location.pathname !== '/analytics' ? ( 
                         <a href='/analytics' className="no-decoration mr-5 p2">
-                        <i className="fa fa-bar-chart fa-2x" aria-hidden="true"></i>
+                            <i className="fa fa-bar-chart fa-2x" aria-hidden="true"></i>
                         </a>
+                        ) : (
+                             <a href='/' className="no-decoration mr-5 p2">
+                             <i className="fa fa-home fa-2x" aria-hidden="true"></i>
+                         </a>
+                        )}
+                       
                         <a href='/' onClick={() => {
                             localStorage.clear()
                             return <Redirect to='/' push={true} />

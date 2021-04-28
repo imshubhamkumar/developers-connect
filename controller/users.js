@@ -15,8 +15,53 @@ router.get('/users_list', ensureAuthenticated, async (req, res) => {
     return res.status(200).json({status: true, data: users})
 })
 
-router.get('/getUserDetails/:id', ensureAuthenticated, async (req, res) => {
-    const user = await User.findOne({ _id: req.params.id});
+router.get('/latest_users_list', async (req, res) => {
+    const users = await User.find({userType: 'basic'}).sort('createdAt').limit(10)
+    return res.status(200).json({status: true, data: users})
+})
+
+router.get('/top_users_list', async (req, res) => {
+    //const users = await User.find({userType: 'basic'}).sort('createdAt').limit(10)
+    const users = await User.aggregate([
+        {$match: {$and: [{userType: 'basic'}]}},
+        {$unwind: '$dataStructure'},
+        {$unwind: '$algorithms'},
+        {$unwind: '$javascript'},
+        {$unwind: '$html'},
+        {$unwind: '$java'},
+        {$unwind: '$python'},
+        {$unwind: '$cpp'},
+        {$group:{
+            _id: {
+                'id': '$_id',
+                'fullName': '$fullName',
+                'email': '$email',
+                'university': '$unversity',
+                'location': '$location',
+                'deviceType': '$deviceType'
+            },
+            percentile: { $sum: { $add: ['$dataStructure', '$algorithms', '$javascript', '$html', '$java', '$python', '$cpp']}}
+        }},
+        {$project: {
+            '_id': 0,
+            'userId': '$_id.id',
+            'fullName': '$_id.fullName',
+            'percentile': '$percentile',
+            'email': '$_id.email',
+            'university': '$_id.unversity',
+            'location': '$_id.location',
+            'deviceType': '$_id.deviceType'
+        }},
+        {$sort: {percentile: -1}}
+    ])
+    return res.status(200).json({status: true, data: users})
+})
+
+router.get('/getUserDetails/:id', async (req, res) => {
+    const user = await User.findOne({ _id: req.params.id}, {_v: false});
+    const greater = await User.count({percentile: {$gt: user.percentile}})
+    const same = await User.count({percentile: user.percentile, createdAt: {$gt: user.createdAt}})
+    user.rank = greater + same + 1;
     return res.status(200).json({status: true, data: user})
 })
 
@@ -29,6 +74,29 @@ router.get('/deleteUser/:id', ensureAuthenticated, async (req, res) => {
         }
     })
 })
+
+router.get('/getDevicesShare', async (req, res) => {
+    const desktop = await User.countDocuments({deviceType: 'desktop', userType: 'basic'});
+    const tablat = await User.countDocuments({deviceType: 'tablate', userType: 'basic'});
+    const mobile = await User.countDocuments({deviceType: 'mobile', userType: 'basic'});
+    const data = {
+        desktop,
+        mobile,
+        tablat    }
+    res.status(200).json({status: true, data});
+})
+
+router.get('/getUserNumbers', ensureAuthenticated, async (req, res) => {
+    const activeUsers = await User.countDocuments({active: true});
+    const totalUsers = await User.countDocuments({userType: 'basic'});
+    const data = {
+        activeUsers,
+        totalUsers
+    }
+    res.status(200).json({status: true, data});
+})
+
+
 
 router.post('/signUp', async (req, res) => {
     const user = new User({
@@ -48,7 +116,7 @@ router.post('/signUp', async (req, res) => {
         java: req.body.java,
         javascript: req.body.js,
         python: req.body.py,
-        deviceType: req.body.deviceType,
+        deviceType: req.body.deviceType
     })
 
     user.save((err, data) => {
@@ -82,7 +150,7 @@ router.post('/login', async (req, res, next) => {
                 }
                 const accessToken = await signRefreshToken(user.email)
                 const refreshToken = await signRefreshToken(user.email)
-                return res.status(200).json({status: true, message: 'Login Successfull', accessToken: accessToken, refreshToken: refreshToken})
+                return res.status(200).json({status: true, message: 'Login Successfull', accessToken: accessToken, refreshToken: refreshToken, user})
             })
         })(req, res, next)
     }

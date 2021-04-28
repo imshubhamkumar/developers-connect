@@ -6,6 +6,7 @@ import {deleteUser} from '../../dataService';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 toast.configure();
+
 class UsersList extends Component {
     
     constructor(props) {

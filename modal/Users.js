@@ -13,22 +13,24 @@ const UserSchema = new Schema({
     education: { type: String, require: false },
     university: { type: String, require: false },
     rank: { type: Number, require: false, default: 0 },
+    percentile: { type: Number, require: false, default: 0 },
     challengesSolved: { type: String, require: false },
     solutionSubmitted: { type: String, require: false },
     solutionAccepted: { type: String, require: false },
-    dataStructure: { type: String, require: false },
-    algorithms: { type: String, require: false },
-    cpp: { type: String, require: false },
-    html: { type: String, require: false },
-    java: { type: String, require: false },
-    javascript: { type: String, require: false },
-    python: { type: String, require: false },
+    dataStructure: { type: Number, require: false, default: 0 },
+    algorithms: { type: Number, require: false, default: 0 },
+    cpp: { type: Number, require: false, default: 0 },
+    html: { type: Number, require: false, default: 0 },
+    java: { type: Number, require: false, default: 0 },
+    javascript: { type: Number, require: false, default: 0 },
+    python: { type: Number, require: false, default: 0 },
     followers: { type: Array, require: false, default: [] },
     following: { type: Array, require: false, default: [] },
     voted: { type: Array, require: false, default: [] },
     votes:  {type: String, require: false, default: '0' },
     timestamp: { type: Number, require: false, default: toTimestamp(new Date()) },
-    deviceType: { type: String, require: false, default: 'computer' },
+    createdAt: { type: Date, require: false, default: new Date()},
+    deviceType: { type: String, require: false, default: 'desktop' },
     active: { type: String, require: false },
 });
 
@@ -45,6 +47,15 @@ UserSchema.pre('save', function (next) {
             next()
         })
     })    
+})
+
+UserSchema.pre('save', function (next) {
+    var user = this
+    if (!user.isModified('percentile')) {
+        return next()
+    }
+    const percentile = user.dataStructure + user.algorithms + user.cpp + user.java + user.html + user.javascript + user.python;
+    user.percentile = percentile;
 })
 
 const Users = mongoose.model('users',UserSchema);

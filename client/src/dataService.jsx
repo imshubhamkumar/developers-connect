@@ -48,6 +48,54 @@ export async function deleteUser(token, id) {
     .then(data => data.json())
 }
 
+export async function getLatestUser(token) {
+    
+    return fetch(apiURL + 'users/latest_users_list', {
+        method: 'get',
+        headers: {
+            'Content-type': 'application/json',
+            'authorization': token
+        }
+    })
+    .then(data => data.json())
+}
+
+export async function getTopUsers(token) {
+    
+    return fetch(apiURL + 'users/top_users_list', {
+        method: 'get',
+        headers: {
+            'Content-type': 'application/json',
+            'authorization': token
+        }
+    })
+    .then(data => data.json())
+}
+
+export async function getUserDevices(token) {
+    
+    return fetch(apiURL + 'users/getDevicesShare', {
+        method: 'get',
+        headers: {
+            'Content-type': 'application/json',
+            'authorization': token
+        }
+    })
+    .then(data => data.json())
+}
+
+export async function getTotalUsers(token) {
+    
+    return fetch(apiURL + 'users/getUserNumbers', {
+        method: 'get',
+        headers: {
+            'Content-type': 'application/json',
+            'authorization': token
+        }
+    })
+    .then(data => data.json())
+}
+
 export async function signUpUser(body) {
     return fetch(apiURL + 'users/signUp', {
         method: 'post',

@@ -8,8 +8,14 @@ import {Switch, Route} from 'react-router-dom';
 import Register from './components/registration';
 import UserDetails from './components/userDetails';
 import Analytics from './components/analytic';
+import { toast } from 'react-toastify';
+import jwt from 'jsonwebtoken';
+import 'react-toastify/dist/ReactToastify.css';
+import env from './config/env';
+toast.configure();
 function App() {
   const {token, setToken} = useToken();
+ 
   if(!token) {
     return (
       <Switch>
@@ -21,25 +27,32 @@ function App() {
         <Route path="*" component={() => "404 NOT FOUND"} />
       </Switch>
     )
+  } else {
+    jwt.verify(JSON.parse(localStorage.accessToken).accessToken, env.SCERET,(err, data) => {
+      if (err) {
+        localStorage.clear();
+        window.location.href='/'
+      }
+    })
+    return (
+      <React.Fragment>
+        <Navbar/>
+        <main className="container">
+          <Switch>
+          <Route exact path='/'>
+            <UserList token={token}/>
+          </Route>
+          <Route exact path='/details/:id'>
+            <UserDetails/>
+          </Route>
+          <Route exact path='/analytics'>
+            <Analytics/>
+          </Route>
+          </Switch>
+        </main>
+      </React.Fragment>
+    );
   }
-  return (
-    <React.Fragment>
-      <Navbar/>
-      <main className="container">
-        <Switch>
-        <Route exact path='/'>
-          <UserList token={token}/>
-        </Route>
-        <Route exact path='/details/:id'>
-          <UserDetails/>
-        </Route>
-        <Route exact path='/analytics'>
-          <Analytics/>
-        </Route>
-        </Switch>
-      </main>
-    </React.Fragment>
-  );
 }
 
 export default App;

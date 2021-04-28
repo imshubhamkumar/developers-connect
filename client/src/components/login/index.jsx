@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { loginUser } from "../../dataService";
 import './login.css'
 import PropTypes from 'prop-types';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+toast.configure();
 const Login = ({setToken}) => {
 const [email, setUserName] = useState();
 const [password, setPassword] = useState();
@@ -13,7 +15,23 @@ const handleSubmit = async e => {
         email,
         password
     })
+    if (!token.status) {
+      notify(token.errors, 'error', 'top-center', false, true)
+    } else {
+      notify(token.message, 'success', 'bottom-right', '5000', false)
+    }
     setToken(token)
+}
+const notify = (msg, type, location, timer, progressBar) => {
+  toast[type](msg,{
+      position: location,
+      autoClose: timer,
+      hideProgressBar: progressBar,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+  });
 }
     return (
       <div className="login-main">

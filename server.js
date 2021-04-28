@@ -10,7 +10,7 @@ const AppRoutes = require('./controller/users');
 const env = require('./config/env');
 app.use(cors())
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 5000;
 
 
 app.use('/login', (req, res) => {
