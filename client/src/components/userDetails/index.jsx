@@ -1,12 +1,21 @@
 import React, { Component } from "react";
 import "./userdetails.css";
 import Skills from '../skills';
+import { css } from "@emotion/react";
 import {getUserDetails} from '../../dataService';
+import MoonLoader from "react-spinners/MoonLoader";
+
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+`;
 
 class UserDetails extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      userId: '',
       location: '',
       university: '',
       fullName: '',
@@ -17,7 +26,9 @@ class UserDetails extends Component {
       cs: '',
       ss: '',
       as: '',
-      skills: []
+      skills: [],
+      currentUser: JSON.parse(localStorage.accessToken).user,
+      loading: true
     };
   }
   componentDidMount() {
@@ -28,6 +39,7 @@ class UserDetails extends Component {
     const token = JSON.parse(localStorage.getItem('accessToken')).accessToken
     await getUserDetails(token, id).then((result) => {
             this.setState({
+                userId: result.data._id,
                 location: result.data.location,
                 fullName: result.data.fullName,
                 university: result.data.university,
@@ -46,13 +58,17 @@ class UserDetails extends Component {
                   {id: Math.random().toString(36).substring(2, 7), name:'Java', score: result.data.java},
                   {id: Math.random().toString(36).substring(2, 7), name:'Python', score: result.data.python},
                   {id: Math.random().toString(36).substring(2, 7), name:'HTML', score: result.data.html}
-                ]
+                ],
+                loading: false
             })
         })
   }
   render() {
     return (
       <div>
+        <div className={this.state.loading? 'sweet-loading': ''}>
+          <MoonLoader css={override} size={150} color={"#123abc"} loading={this.state.loading} />
+        </div>
         <div className="card mt-4 main-card-user-detail">
           <div className="row">
             <div className="col-md-2 col-sm-12 bg-c-lite-green p-2">
@@ -107,18 +123,21 @@ class UserDetails extends Component {
                 <label htmlFor="sa">Solutions accepted: </label>
                 <span id="sa">{this.state.sa}</span>
               </div>
-              <div className="row">
-                  <div className="col-sm-6">
-                    <button type="button" className="btn btn-primary">
-                    <i className="fa fa-plus" aria-hidden="true"></i> Follow
-                    </button>
-                  </div>
-                  <div className="col-sm-6">            
-                        <button type="button" className="btn btn-primary">
-                        <i className="fa fa-arrow-up" aria-hidden="true"></i> Upvote
-                        </button>
-                  </div>
-              </div>
+              {this.state.currentUser._id !== this.state.userId ? (
+                              <div className="row">
+                              <div className="col-sm-6">
+                                <button type="button" className="btn btn-primary">
+                                <i className="fa fa-plus" aria-hidden="true"></i> Follow
+                                </button>
+                              </div>
+                              <div className="col-sm-6">            
+                                    <button type="button" className="btn btn-primary">
+                                    <i className="fa fa-arrow-up" aria-hidden="true"></i> Upvote
+                                    </button>
+                              </div>
+                          </div>
+              ) : ("")}
+
 
             </div>
           </div>

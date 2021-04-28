@@ -69,6 +69,16 @@ module.exports.comparePassword = function (candidatePassword, hash, callback) {
     })
 }
 
+module.exports.hashThePassword = async (newPassword) => {
+    const hashedPassword = await new Promise((resolve, reject) => {
+        bcrypt.hash(newPassword, SALT_WORK_FACTOR, (err, hash) => {
+            if (err) reject(err)
+            resolve(hash)
+        })
+    })
+    return hashedPassword;
+}
+
 function toTimestamp(strDate){
     var datum = Date.parse(strDate);
     return datum/1000;

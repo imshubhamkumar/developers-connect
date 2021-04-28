@@ -1,11 +1,20 @@
 import React, {Component} from 'react';
 import {getLatestUser} from '../../dataService';
+import 'react-toastify/dist/ReactToastify.css';import { css } from "@emotion/react";
+import MoonLoader from "react-spinners/MoonLoader";
+
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+`;
 
 class LatestUsers extends Component {
     constructor(props) {
       super(props)
       this.state ={
-          latestUsers: [] 
+          latestUsers: [] ,
+          loading: true
       }
   }
   componentDidMount() {
@@ -15,7 +24,8 @@ class LatestUsers extends Component {
     getLatestUser = async () => {
         const token = JSON.parse(localStorage.getItem('accessToken')).accessToken
         await getLatestUser(token).then((result) => {
-        this.setState({latestUsers: result.data })
+        this.setState({latestUsers: result.data,
+            loading: false })
         })
   }
     render() {
@@ -25,6 +35,9 @@ class LatestUsers extends Component {
                       <h4>Most recent updated hackers</h4>
                   </div>
                 <div className='card-body'>
+                    <div className={this.state.loading? 'sweet-loading': ''}>
+                        <MoonLoader css={override} size={150} color={"#123abc"} loading={this.state.loading} />
+                    </div>
                     <div className="table-responsive">
                         <table className="table">
                             <thead className="thead-dark">

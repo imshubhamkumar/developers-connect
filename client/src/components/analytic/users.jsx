@@ -2,6 +2,14 @@ import React, { Component } from 'react';
 import Chart from "react-apexcharts";
 import './analytic.css'
 import {getTotalUsers} from '../../dataService';
+import 'react-toastify/dist/ReactToastify.css';import { css } from "@emotion/react";
+import MoonLoader from "react-spinners/MoonLoader";
+
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+`;
 class UsersRatio extends Component {
     constructor(props) {
         super(props)
@@ -19,7 +27,8 @@ class UsersRatio extends Component {
                     name: 'Users',
                     data: [0, 0]
                   }
-              ]
+              ],
+              loading: true
         }
     }
     componentDidMount() {
@@ -35,7 +44,8 @@ class UsersRatio extends Component {
                     name: 'Users',
                     data: [result.data.totalUsers, result.data.activeUsers]
                   }
-              ]
+              ],
+              loading: false
            })
         })
       }
@@ -45,7 +55,10 @@ class UsersRatio extends Component {
         return ( 
             <div className="card chart-container">
                 <div className="card-body">
-                    <Chart options={this.state.options} series={this.state.series} type={this.state.options.chart.type} width="500"/>
+                  <div className={this.state.loading? 'sweet-loading': ''}>
+                      <MoonLoader css={override} size={150} color={"#123abc"} loading={this.state.loading} />
+                  </div>
+                  <Chart options={this.state.options} series={this.state.series} type={this.state.options.chart.type} width="500"/>
                 </div>
             </div>
          );

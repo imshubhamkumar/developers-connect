@@ -15,12 +15,12 @@ router.get('/users_list', ensureAuthenticated, async (req, res) => {
     return res.status(200).json({status: true, data: users})
 })
 
-router.get('/latest_users_list', async (req, res) => {
+router.get('/latest_users_list', ensureAuthenticated, async (req, res) => {
     const users = await User.find({userType: 'basic'}).sort('createdAt').limit(10)
     return res.status(200).json({status: true, data: users})
 })
 
-router.get('/top_users_list', async (req, res) => {
+router.get('/top_users_list', ensureAuthenticated, async (req, res) => {
     //const users = await User.find({userType: 'basic'}).sort('createdAt').limit(10)
     const users = await User.aggregate([
         {$match: {$and: [{userType: 'basic'}]}},
@@ -57,10 +57,10 @@ router.get('/top_users_list', async (req, res) => {
     return res.status(200).json({status: true, data: users})
 })
 
-router.get('/getUserDetails/:id', async (req, res) => {
+router.get('/getUserDetails/:id', ensureAuthenticated, async (req, res) => {
     const user = await User.findOne({ _id: req.params.id}, {_v: false});
-    const greater = await User.count({percentile: {$gt: user.percentile}})
-    const same = await User.count({percentile: user.percentile, createdAt: {$gt: user.createdAt}})
+    const greater = await User.countDocuments({percentile: {$gt: user.percentile}})
+    const same = await User.countDocuments({percentile: user.percentile, createdAt: {$gt: user.createdAt}})
     user.rank = greater + same + 1;
     return res.status(200).json({status: true, data: user})
 })
@@ -75,7 +75,7 @@ router.get('/deleteUser/:id', ensureAuthenticated, async (req, res) => {
     })
 })
 
-router.get('/getDevicesShare', async (req, res) => {
+router.get('/getDevicesShare', ensureAuthenticated, async (req, res) => {
     const desktop = await User.countDocuments({deviceType: 'desktop', userType: 'basic'});
     const tablat = await User.countDocuments({deviceType: 'tablate', userType: 'basic'});
     const mobile = await User.countDocuments({deviceType: 'mobile', userType: 'basic'});
@@ -124,6 +124,17 @@ router.post('/signUp', async (req, res) => {
             return res.status(200).json({status: false, error:'There was an error while adding new user'})
         } else {
             return res.status(200).json({status: true, message: 'The new user signedup successfuly.'});
+        }
+    })
+})
+
+router.post('/changePassword/:id', ensureAuthenticated, async (req, res) => {
+    const newPassword = await User.hashThePassword(req.body.newPassword)
+    User.updateOne({_id: req.params.id}, {password: newPassword}, (err, data) => {
+        if (err) {
+            return res.status(200).json({status: false, error:'There was an error while updating new password'})
+        } else {
+            return res.status(200).json({status: true, message: 'The new password updated successfuly.'});
         }
     })
 })

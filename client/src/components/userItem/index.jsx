@@ -6,7 +6,8 @@ class UserItem extends Component {
   constructor(props) {
     super(props)
     this.state={
-      url: `details/${props.userId}`
+      url: `details/${props.userId}`,
+      currentUser: JSON.parse(localStorage.accessToken).user
     }
   }
 
@@ -39,10 +40,12 @@ class UserItem extends Component {
               </div>
               </a>
               </div>
-              
+              {this.state.currentUser.userType === 'admin' ? (
                 <div className="col-md-2 user-item-name">
                   <i className="fa fa-trash fa-2x" aria-hidden="true" onClick={() => this.props.onDelete(this.props.userId)}></i>
                 </div>
+              ) : ('')}
+                
             </div>
           </div>
         </div>
