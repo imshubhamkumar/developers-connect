@@ -124,7 +124,7 @@ class SignUp extends Component {
         await signUpUser(params).then((result) =>{
           if(result.status) {
             this.notify('Your signed up successfully please goto login', 'success', 'bottom-right', '5000', false);
-            <Redirect to="/login"/>
+            window.location.href = '/'
           } else {
             this.notify(result.errors, 'error', 'top-center', false, true)
           }
@@ -175,6 +175,7 @@ class SignUp extends Component {
           this.submitSignup(user);
         } else {
           const errors = payload.errors;
+          this.notify(payload.errorsList[0], "error", "top-center", false, false)
           this.setState({
             errors
           });

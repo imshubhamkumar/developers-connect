@@ -2,6 +2,7 @@ const validator = require("validator");
 
 const validateSignUpForm = payload => {
   const errors = {};
+  const errorsList = [];
   let message = "";
   let isFormValid = true;
 
@@ -11,7 +12,8 @@ const validateSignUpForm = payload => {
     payload.fullName.trim().length === 0
   ) {
     isFormValid = false;
-    errors.fullName = "Please provide a user name.";
+    errors.fullName = "Please provide a Full name.";
+    errorsList.push("Please provide a Full name.")
   }
 
   if (
@@ -21,6 +23,7 @@ const validateSignUpForm = payload => {
   ) {
     isFormValid = false;
     errors.email = "Please provide a correct email address.";
+    errorsList.push("Please provide a correct email address.")
   }
 
   if (
@@ -30,6 +33,7 @@ const validateSignUpForm = payload => {
   ) {
     isFormValid = false;
     errors.password = "Password must have at least 8 characters.";
+    errorsList.push("Password must have at least 8 characters.")
   }
 
 //   if (!payload || payload.pwconfirm !== payload.password) {
@@ -44,6 +48,7 @@ const validateSignUpForm = payload => {
   ) {
     isFormValid = false;
     errors.location = "Please provide your location.";
+    errorsList.push("Please provide your location.")
   }
 
   if (
@@ -53,6 +58,7 @@ const validateSignUpForm = payload => {
   ) {
     isFormValid = false;
     errors.education = "Please provide your education.";
+    errorsList.push("Please provide your education.")
   }
 
   if (
@@ -62,6 +68,7 @@ const validateSignUpForm = payload => {
   ) {
     isFormValid = false;
     errors.university = "Please provide your university name.";
+    errorsList.push("Please provide your university name.")
   }
 
   if (
@@ -71,6 +78,7 @@ const validateSignUpForm = payload => {
   ) {
     isFormValid = false;
     errors.cs = "Please provide numbers for chanllenges you solved.";
+    errorsList.push("Please provide numbers for chanllenges you solved.")
   }
 
   if (
@@ -80,6 +88,7 @@ const validateSignUpForm = payload => {
   ) {
     isFormValid = false;
     errors.ss = "Please provide numbers of solution you submited";
+    errorsList.push("Please provide numbers of solution you submited")
   }
 
   if (
@@ -89,6 +98,7 @@ const validateSignUpForm = payload => {
   ) {
     isFormValid = false;
     errors.ds = "Please provide proficiancy in data stucture";
+    errorsList.push("Please provide proficiancy in data stucture")
   }
 
   if (
@@ -98,6 +108,7 @@ const validateSignUpForm = payload => {
   ) {
     isFormValid = false;
     errors.cpp = "Please provide proficiancy in C++";
+    errorsList.push("Please provide proficiancy in C++")
   }
 
   if (
@@ -107,6 +118,7 @@ const validateSignUpForm = payload => {
   ) {
     isFormValid = false;
     errors.html = "Please provide proficiancy in html";
+    errorsList.push("Please provide proficiancy in html")
   }
   if (
     !payload ||
@@ -115,6 +127,7 @@ const validateSignUpForm = payload => {
   ) {
     isFormValid = false;
     errors.js = "Please provide proficiancy in javascript";
+    errorsList.push("Please provide proficiancy in javascript")
   }
   if (
     !payload ||
@@ -123,6 +136,7 @@ const validateSignUpForm = payload => {
   ) {
     isFormValid = false;
     errors.java = "Please provide proficiancy in java";
+    errorsList.push("Please provide proficiancy in java")
   }
 
   if (
@@ -132,6 +146,7 @@ const validateSignUpForm = payload => {
   ) {
     isFormValid = false;
     errors.py = "Please provide proficiancy in python";
+    errorsList.push("Please provide proficiancy in python")
   }
   if (
     !payload ||
@@ -140,6 +155,7 @@ const validateSignUpForm = payload => {
   ) {
     isFormValid = false;
     errors.algo = "Please provide proficiancy in algorithms";
+    errorsList.push("Please provide proficiancy in algorithms")
   }
   
   if (!isFormValid) {
@@ -149,7 +165,8 @@ const validateSignUpForm = payload => {
   return {
     success: isFormValid,
     message,
-    errors
+    errors,
+    errorsList
   };
 };
 

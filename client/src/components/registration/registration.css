@@ -149,5 +149,7 @@ a {
 @media (max-width: 600px) {
     .main {
         border-radius: 0px;
+        padding: 50px 10px;
+        width: 95%;
     }
 }

@@ -10,7 +10,7 @@ class Navbar extends Component {
         return (
             <nav className="navbar navbar-dark bg-dark text-white">
                 <div className="container-fluid">
-                    <h5>Navbar</h5>
+                    <h5>Hackers</h5>
                     <form className="d-flex">
                         {this.state.currentUser.userType === 'admin' ? (
                             window.location.pathname !== '/analytics' ? ( 

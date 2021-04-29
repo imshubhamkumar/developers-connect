@@ -13,7 +13,7 @@ const UserSchema = new Schema({
     education: { type: String, require: false },
     university: { type: String, require: false },
     rank: { type: Number, require: false, default: 0 },
-    percentile: { type: Number, require: false, default: 0 },
+    percentile: { type: Number, require: false},
     challengesSolved: { type: String, require: false },
     solutionSubmitted: { type: String, require: false },
     solutionAccepted: { type: String, require: false },
@@ -51,9 +51,6 @@ UserSchema.pre('save', function (next) {
 
 UserSchema.pre('save', function (next) {
     var user = this
-    if (!user.isModified('percentile')) {
-        return next()
-    }
     const percentile = user.dataStructure + user.algorithms + user.cpp + user.java + user.html + user.javascript + user.python;
     user.percentile = percentile;
     next()

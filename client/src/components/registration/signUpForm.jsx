@@ -5,6 +5,7 @@ const SignUpForm = ({
     onSubmit,
     onChange,
     errors,
+    errorList,
     user,
     score,
     btnTxt,
@@ -19,7 +20,7 @@ const SignUpForm = ({
         {name:'Associate degree'},
         {name:'Bachelor\'s degree'},
         {name:'Master\'s degree or Higher'}
-    ]
+    ];
     return(
         <div className="main">
             <div className="text-center mb-4"><h3>Sign Up</h3></div>
@@ -107,6 +108,9 @@ const SignUpForm = ({
                 <div className="col-md-12 mt-4">
                     <button type="submit" className="signup-submit" aligne="center">Sign Up</button>
                 </div>
+                <p className="forgot" align="center">
+            <a href="/">Already have an account</a>
+          </p>
             </div>
         </form>
         </div>
