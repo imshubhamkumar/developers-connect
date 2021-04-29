@@ -56,6 +56,7 @@ UserSchema.pre('save', function (next) {
     }
     const percentile = user.dataStructure + user.algorithms + user.cpp + user.java + user.html + user.javascript + user.python;
     user.percentile = percentile;
+    next()
 })
 
 const Users = mongoose.model('users',UserSchema);

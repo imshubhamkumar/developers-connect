@@ -16,7 +16,7 @@ router.get('/users_list', ensureAuthenticated, async (req, res) => {
 })
 
 router.get('/latest_users_list', ensureAuthenticated, async (req, res) => {
-    const users = await User.find({userType: 'basic'}).sort('createdAt').limit(10)
+    const users = await User.find({userType: 'basic'}).sort({'createdAt': -1}).limit(10)
     return res.status(200).json({status: true, data: users})
 })
 
@@ -71,6 +71,16 @@ router.get('/deleteUser/:id', ensureAuthenticated, async (req, res) => {
             return res.status(200).json({status: false, data: 'Error'})
         } else{
             return res.status(200).json({status: true, data: 'User deleted'})
+        }
+    })
+})
+
+router.get('/userLogout/:userId', async (req, res) => {
+    User.updateOne({_id: req.params.userId}, {active: false}, (err, data) => {
+        if(err) {
+            return res.status(200).json({status: false, data: 'Error while logging out please try again'})
+        } else {
+            return res.status(200).json({status: true, data: 'You are logged out successfully.'})
         }
     })
 })
@@ -161,7 +171,13 @@ router.post('/login', async (req, res, next) => {
                 }
                 const accessToken = await signRefreshToken(user.email)
                 const refreshToken = await signRefreshToken(user.email)
-                return res.status(200).json({status: true, message: 'Login Successfull', accessToken: accessToken, refreshToken: refreshToken, user})
+                User.updateOne({_id: user._id}, {active: true}, (err, data) => {
+                    if(err) {
+                        return res.status(200).json({status: false, data: 'Error while login please try again'})
+                    } else {
+                        return res.status(200).json({status: true, message: 'Login Successfull', accessToken: accessToken, refreshToken: refreshToken, user})
+                    }
+                })
             })
         })(req, res, next)
     }
