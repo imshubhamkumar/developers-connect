@@ -29,7 +29,9 @@ componentDidMount() {
     this.getTotalUsers = this.getUserDevices(this);
   }
   getUserDevices = async () => {
-    await getUserDevices(this.token).then((result) => {
+    const token = JSON.parse(localStorage.getItem('accessToken')).accessToken
+    await getUserDevices(token).then((result) => {
+      console.log(result.data);
         this.setState({
           series: [result.data.desktop, result.data.tablat, result.data.mobile],
           loading: false
