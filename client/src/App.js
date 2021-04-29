@@ -15,7 +15,6 @@ import env from './config/env';
 toast.configure();
 function App() {
   const {token, setToken} = useToken();
- 
   if(!token) {
     return (
       <Switch>
@@ -34,6 +33,7 @@ function App() {
         window.location.href='/'
       }
     })
+    const currentUser= JSON.parse(localStorage.accessToken).user;
     return (
       <React.Fragment>
         <Navbar/>
@@ -45,9 +45,9 @@ function App() {
           <Route exact path='/details/:id'>
             <UserDetails/>
           </Route>
-          <Route exact path='/analytics'>
+          {currentUser.userType === 'admin' ? (<Route exact path='/analytics'>
             <Analytics/>
-          </Route>
+          </Route>) : (<Route path="*" component={() => "Access forbidden"} />)}
           </Switch>
         </main>
       </React.Fragment>
