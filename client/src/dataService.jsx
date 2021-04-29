@@ -106,3 +106,13 @@ export async function signUpUser(body) {
     })
     .then(data => data.json())
 }
+
+export async function logout(userid) {
+    return fetch(apiURL + 'users/userLogout/' + userid, {
+        method: 'get',
+        headers: {
+            'Content-type': 'application/json'
+        }
+    })
+    .then(data => data.json())
+}

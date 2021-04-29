@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import jwt from 'jsonwebtoken';
 import 'react-toastify/dist/ReactToastify.css';
 import env from './config/env';
+import {logout} from './dataService';
 toast.configure();
 function App() {
   const {token, setToken} = useToken();
@@ -27,13 +28,14 @@ function App() {
       </Switch>
     )
   } else {
+    const currentUser= JSON.parse(localStorage.accessToken).user;
     jwt.verify(JSON.parse(localStorage.accessToken).accessToken, env.SCERET,(err, data) => {
       if (err) {
+        logout(currentUser._id)
         localStorage.clear();
         window.location.href='/'
       }
     })
-    const currentUser= JSON.parse(localStorage.accessToken).user;
     return (
       <React.Fragment>
         <Navbar/>

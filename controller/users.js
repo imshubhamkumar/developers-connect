@@ -97,7 +97,7 @@ router.get('/getDevicesShare', ensureAuthenticated, async (req, res) => {
 })
 
 router.get('/getUserNumbers', ensureAuthenticated, async (req, res) => {
-    const activeUsers = await User.countDocuments({active: true});
+    const activeUsers = await User.countDocuments({active: true, userType: 'basic'});
     const totalUsers = await User.countDocuments({userType: 'basic'});
     const data = {
         activeUsers,

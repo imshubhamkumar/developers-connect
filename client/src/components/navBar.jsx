@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router';
+import {logout} from '../dataService';
 
 class Navbar extends Component {
     state = {
@@ -24,6 +25,7 @@ class Navbar extends Component {
 
                        
                         <a href='/' onClick={() => {
+                            logout(this.state.currentUser._id)
                             localStorage.clear()
                             return <Redirect to='/' push={true} />
                         }} className="btn btn-outline-success" type="submit"><i className="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
