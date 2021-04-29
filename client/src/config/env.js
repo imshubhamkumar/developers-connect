@@ -1,7 +1,7 @@
 if (process.env.NODE_ENV === 'production') {
     module.exports = {
         API_URL: '',
-        SCERET: process.env.JWT_SCERET
+        SCERET: 'kCINp085KsigJTBPCoxm'
     }
 } else {
     module.exports = {
